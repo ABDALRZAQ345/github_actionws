@@ -10,4 +10,8 @@ jobs:
     steps:
       - name: print welcome message 
         run: echo "welcome to first workflow"
-    
+      - name: checkout the repo 
+        uses: actions/checkout@v5.0.0
+      - name: fetch all files
+        run: ls -la
+         

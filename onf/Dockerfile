@@ -4,16 +4,8 @@ FROM php:8.3-fpm
 # Install system dependencies
 # ------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libonig-dev \
-    zip \
-    curl \
-    bash \
-    git \
-    unzip \
+    libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    libzip-dev libonig-dev zip curl bash git unzip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ------------------------
@@ -35,37 +27,30 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # ------------------------
-# Copy only composer files first for caching
-# ------------------------
-COPY composer.json composer.lock ./
-
-# ------------------------
-# Install Laravel dependencies
-# ------------------------
-RUN composer install --optimize-autoloader --no-interaction --prefer-dist --no-scripts
-
-# ------------------------
-# Copy the rest of the application
+# Copy full project
 # ------------------------
 COPY . .
+
+# ------------------------
+# Install Laravel dependencies (with scripts, because now artisan موجود)
+# ------------------------
+RUN composer install --optimize-autoloader --no-interaction --prefer-dist
+
 # ------------------------
 # Run Laravel package discovery
 # ------------------------
 RUN php artisan package:discover --ansi
+
 # ------------------------
-# Create necessary directories & permissions
+# Set permissions
 # ------------------------
 RUN mkdir -p storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 755 storage bootstrap/cache
-
-# Laravel subdirectories (framework caches, logs, sessions, views)
-RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
+    && chmod -R 755 storage bootstrap/cache \
+    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
     && chown -R www-data:www-data storage \
-    && chmod -R 755 storage
-
-# Bootstrap cache permissions
-RUN mkdir -p bootstrap/cache \
+    && chmod -R 755 storage \
+    && mkdir -p bootstrap/cache \
     && chown -R www-data:www-data bootstrap/cache \
     && chmod -R 755 bootstrap/cache
 

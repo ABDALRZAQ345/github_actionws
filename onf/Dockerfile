@@ -48,7 +48,10 @@ RUN composer install --optimize-autoloader --no-interaction --prefer-dist --no-s
 # Copy the rest of the application
 # ------------------------
 COPY . .
-
+# ------------------------
+# Run Laravel package discovery
+# ------------------------
+RUN php artisan package:discover --ansi
 # ------------------------
 # Create necessary directories & permissions
 # ------------------------

@@ -28,6 +28,9 @@ jobs:
 
       - name: Test Nginx is reachable
         run: |
+          BODY=$(curl -s http://localhost:8080)
+          echo "Response from server:"
+          echo "$BODY"
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
           echo "HTTP status: $RESPONSE"
           echo "Response from server:"
@@ -39,6 +42,9 @@ jobs:
           echo "Nginx is working ✅"
       - name: Test route is reachable
         run: |
+          BODY=$(curl -s http://localhost:8080/test)
+          echo "Response from server:"
+          echo "$BODY"
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/test)
           echo "HTTP status: $RESPONSE"
           echo "Response from server:"
@@ -50,6 +56,9 @@ jobs:
           echo "Nginx is working ✅"
       - name: Test unexisting  route
         run: |
+          BODY=$(curl -s http://localhost:8080/some)
+          echo "Response from server:"
+          echo "$BODY"
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/some)
           echo "HTTP status: $RESPONSE"
           echo "Response from server:"

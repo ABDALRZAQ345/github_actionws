@@ -12,17 +12,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zip \
     curl \
     bash \
+    git \
+    unzip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ------------------------
-#  PHP extensions
+# PHP extensions
 # ------------------------
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
     && pecl install redis \
     && docker-php-ext-enable redis
-
-
 
 # ------------------------
 # Composer
@@ -39,14 +39,15 @@ WORKDIR /var/www/html
 # ------------------------
 COPY composer.json composer.lock ./
 
-# Install Laravel dependencies (prod)
-RUN composer install  --optimize-autoloader --no-interaction \
+# ------------------------
+# Install Laravel dependencies
+# ------------------------
+RUN composer install --optimize-autoloader --no-interaction --prefer-dist
 
 # ------------------------
-# Copy application files
+# Copy the rest of the application
 # ------------------------
 COPY . .
-RUN mkdir -p bootstrap/cache
 
 # ------------------------
 # Create necessary directories & permissions
@@ -55,21 +56,17 @@ RUN mkdir -p storage bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 755 storage bootstrap/cache
 
-# Create necessary directories
-RUN mkdir -p /var/www/html/storage/logs
-RUN mkdir -p /var/www/html/storage/framework/cache
-RUN mkdir -p /var/www/html/storage/framework/sessions
-RUN mkdir -p /var/www/html/storage/framework/views
-RUN mkdir -p /var/www/html/bootstrap/cache
+# Laravel subdirectories (framework caches, logs, sessions, views)
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
+    && chown -R www-data:www-data storage \
+    && chmod -R 755 storage
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 755 /var/www/html/storage
-RUN chmod -R 755 /var/www/html/bootstrap/cache
+# Bootstrap cache permissions
+RUN mkdir -p bootstrap/cache \
+    && chown -R www-data:www-data bootstrap/cache \
+    && chmod -R 755 bootstrap/cache
 
-
-
-
-
-
+# ------------------------
+# Set default command
+# ------------------------
 CMD ["php-fpm"]

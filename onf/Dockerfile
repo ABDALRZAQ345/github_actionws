@@ -66,7 +66,7 @@ RUN chmod -R 755 /var/www/html/bootstrap/cache
 
 
 # Install Laravel dependencies (prod)
-RUN composer install  --optimize-autoloader --no-interaction
+RUN composer install  --no-interaction
 
 
 CMD ["php-fpm"]

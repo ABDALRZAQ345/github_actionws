@@ -42,7 +42,7 @@ COPY composer.json composer.lock ./
 # ------------------------
 # Install Laravel dependencies
 # ------------------------
-RUN composer install --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install --optimize-autoloader --no-interaction --prefer-dist --no-scripts
 
 # ------------------------
 # Copy the rest of the application

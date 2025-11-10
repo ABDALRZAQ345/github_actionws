@@ -1,4 +1,4 @@
-name: Laravel
+name: Laravel Sqlite
 
 on:
   push:

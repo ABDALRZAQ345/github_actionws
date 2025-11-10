@@ -1,4 +1,4 @@
-name : first workflow
+name : print hello world
 on :
   push:
     branches:

@@ -1,4 +1,4 @@
-name: Laravel CI
+name: Laravel Mysql
 
 on:
   push:

@@ -39,6 +39,9 @@ WORKDIR /var/www/html
 # ------------------------
 COPY composer.json composer.lock ./
 
+# Install Laravel dependencies (prod)
+RUN composer install  --optimize-autoloader --no-interaction \
+
 # ------------------------
 # Copy application files
 # ------------------------
@@ -66,9 +69,7 @@ RUN chmod -R 755 /var/www/html/bootstrap/cache
 
 
 
-# Install Laravel dependencies (prod)
-RUN composer install  --optimize-autoloader --no-interaction \
-    && rm -rf /root/.composer
+
 
 
 CMD ["php-fpm"]

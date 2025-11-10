@@ -63,9 +63,7 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html/storage
 RUN chmod -R 755 /var/www/html/bootstrap/cache
 
-COPY docker/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
-ENTRYPOINT ["/usr/local/bin/start.sh"]
+
 
 # Install Laravel dependencies (prod)
 RUN composer install  --optimize-autoloader --no-interaction

@@ -35,6 +35,23 @@ jobs:
             exit 1
           fi
           echo "Nginx is working ✅"
-
+      - name: Test route is reachable
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/test)
+          echo "HTTP status: $RESPONSE"
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "Nginx is not reachable"
+            exit 1
+          fi
+          echo "Nginx is working ✅"
+      - name: Test unexisting  route
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/some)
+          echo "HTTP status: $RESPONSE"
+          if [ "$RESPONSE" -ne 404 ]; then
+            echo "Nginx is not reachable"
+            exit 1
+          fi
+          echo "Nginx is working ✅"
       - name: Tear down
-        run: docker-compose down
+        run: docker compose down

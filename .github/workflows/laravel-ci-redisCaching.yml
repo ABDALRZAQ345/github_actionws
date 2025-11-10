@@ -23,7 +23,10 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
-
+    env:
+      CACHE_DRIVER: redis
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
     steps:
       - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:
@@ -48,7 +51,4 @@ jobs:
         run: php artisan test
       - name: Run Redis Cache Test
         run: php artisan tinker --execute="cache()->put('test', 'ok', 10); dump(cache('test'));"
-        env:
-          CACHE_DRIVER: redis
-          REDIS_HOST: 127.0.0.1
-          REDIS_PORT: 6379
+

@@ -7,6 +7,6 @@ Route::get('/', function () {
 });
 Route::get('/test', function () {
     return response()->json([
-
+        "message" => "test here",
     ],200);
 });

@@ -1,0 +1,40 @@
+name: Docker Compose Build & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker-build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and start Docker Compose
+        run: |
+          docker-compose up -d --build
+
+      - name: Wait for services
+        run: |
+          echo "Waiting 10 seconds for services to start..."
+          sleep 10
+
+      - name: Test Nginx is reachable
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
+          echo "HTTP status: $RESPONSE"
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "Nginx is not reachable"
+            exit 1
+          fi
+          echo "Nginx is working ✅"
+
+      - name: Tear down
+        run: docker-compose down

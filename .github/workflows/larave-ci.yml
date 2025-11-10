@@ -10,7 +10,9 @@ jobs:
   laravel-tests:
     name: Run Laravel Tests
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./onf
     services:
       mysql:
         image: mysql:8

@@ -35,12 +35,16 @@ jobs:
           git checkout main
           if ! git merge --no-commit --no-ff ${{ github.event.pull_request.head.ref }}; then
             echo "❌ Conflicts detected. Merge aborted."
+            git merge --abort
             exit 1
           fi
           echo "✅ No conflicts detected."
+          git merge --abort  
 
       - name: Merge PR branch into main
         if: success()
         run: |
           git merge --no-ff ${{ github.event.pull_request.head.ref }} -m "Auto-merged PR #${{ github.event.pull_request.number }}"
           git push origin main
+
+

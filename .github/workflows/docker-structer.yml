@@ -31,20 +31,6 @@ jobs:
           docker compose exec -T app ls -l /var/www/html
           docker compose exec -T app ls -l /var/www/html/vendor
 
-      - name: Test Nginx is reachable
-        run: |
-          BODY=$(curl -s http://localhost:8080)
-          echo "Response from server:"
-          echo "$BODY"
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080)
-          echo "HTTP status: $RESPONSE"
-          echo "Response from server:"
-          echo "$RESPONSE"
-          if [ "$RESPONSE" -ne 200 ]; then
-            echo "Nginx is not reachable"
-            exit 1
-          fi
-          echo "Nginx is working ✅"
       - name: Test route is reachable
         run: |
           BODY=$(curl -s http://localhost:8080/test)

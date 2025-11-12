@@ -1,5 +1,5 @@
 name: Auto Merge
-
+## not secure test required but it is just for learning
 on:
   pull_request:
     branches: [main]

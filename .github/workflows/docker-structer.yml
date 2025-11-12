@@ -46,6 +46,7 @@ jobs:
           fi
           echo "Nginx is working ✅"
       - name: Show Laravel log (if exists)
+        if: always()
         run: |
           echo "Checking Laravel logs..."
           docker compose exec -T app bash -c "if [ -f storage/logs/laravel.log ]; then cat storage/logs/laravel.log; else echo 'No laravel.log file found'; fi"

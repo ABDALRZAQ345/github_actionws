@@ -6,8 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: laravel-app
     working_dir: /var/www/html
-    volumes:
-      - ./onf:/var/www/html
+
     depends_on:
       - mysql
     environment:

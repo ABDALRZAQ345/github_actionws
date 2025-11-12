@@ -30,6 +30,7 @@ jobs:
           
           docker compose exec -T app ls -l /var/www/html
           docker compose exec -T app ls -l /var/www/html/vendor
+          docker compose exec -T app php artisan migrate --force
 
       - name: Test route is reachable
         run: |

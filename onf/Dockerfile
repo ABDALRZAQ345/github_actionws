@@ -68,5 +68,8 @@ RUN chmod -R 755 /var/www/html/bootstrap/cache
 # Install Laravel dependencies (prod)
 RUN composer install  --no-interaction
 
+# Copy example env file and generate key
+RUN cp .env.example .env && \
+    php artisan key:generate
 
 CMD ["php-fpm"]
